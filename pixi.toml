@@ -1,0 +1,23 @@
+[project]
+authors = ["Mehmet Efe Akça <efeakca@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "EQTransformer"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+tensorflow = "~=2.5"
+#keras = ">=2.6.0,<3"
+matplotlib = ">=3.5.3,<4"
+pandas = "==1.4.3"
+tqdm = ">=4.67.1,<5"
+h5py = ">=3.1.0,<4"
+obspy = "==1.4.1"
+jupyter = ">=1.1.1,<2"
+numpy = "==1.24"
+pytest = ">=8.3.3,<9"
+keyring = ">=25.5.0,<26"
+pkginfo = ">=1.11.2,<2"
