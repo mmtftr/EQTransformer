@@ -7,6 +7,9 @@ from pathlib import Path
 from typing import Dict
 import logging
 from datetime import datetime
+from multiprocessing import Pool, cpu_count
+import functools
+import logging.handlers
 
 from tqdm import tqdm
 
@@ -40,6 +43,40 @@ def load_station_metadata(metadata_file: str) -> Dict[str, StationMetadata]:
         )
     return stations
 
+def setup_station_logger(station_code: str, log_dir: Path) -> logging.Logger:
+    """Setup a separate logger for each station"""
+    logger = logging.getLogger(f"station_{station_code}")
+    logger.setLevel(logging.INFO)
+
+    # Create station log file
+    log_file = log_dir / f"{station_code}.log"
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
+    return logger
+
+def process_station_wrapper(args):
+    """Wrapper function for multiprocessing"""
+    station_dir, output_dir, station_metadata, config, log_dir = args
+
+    # Setup station-specific logger
+    logger = setup_station_logger(station_dir.name, log_dir)
+
+    try:
+        logger.info(f"Starting processing for station {station_dir.name}")
+        hdf5_path, csv_path = process_station(
+            str(station_dir),
+            output_dir,
+            station_metadata,
+            config
+        )
+        logger.info(f"Successfully processed station {station_dir.name}")
+        return (station_dir.name, True, None)
+    except Exception as e:
+        logger.error(f"Failed to process station {station_dir.name}: {str(e)}")
+        return (station_dir.name, False, str(e))
+
 def main():
     parser = argparse.ArgumentParser(description='Process GCF files into EQTransformer-compatible HDF5 files')
 
@@ -67,6 +104,10 @@ def main():
 
     # Create output directory
     os.makedirs(args.output_dir, exist_ok=True)
+
+    # Create logs directory
+    log_dir = Path("logs")
+    log_dir.mkdir(exist_ok=True)
 
     # Load station metadata
     try:
@@ -96,25 +137,30 @@ def main():
     else:
         station_dirs = [d for d in Path(args.input_dir).iterdir() if d.is_dir()]
 
-    for station_dir in tqdm(station_dirs):
-        station_code = station_dir.name
-        if station_code not in stations:
-            logging.warning(f"Skipping directory {station_code} - no metadata found")
-            continue
+    # Process stations in parallel
+    num_workers = cpu_count()  # Or specify a different number
+    logging.info(f"Using {num_workers} workers for parallel processing")
 
-        logging.info(f"Processing station {station_code}")
-        try:
-            hdf5_path, csv_path = process_station(
-                str(station_dir),
-                args.output_dir,
-                stations[station_code],
-                config
-            )
+    process_args = [
+        (station_dir, args.output_dir, stations[station_dir.name], config, log_dir)
+        for station_dir in station_dirs
+        if station_dir.name in stations
+    ]
+
+    with Pool(num_workers) as pool:
+        results = list(tqdm(
+            pool.imap(process_station_wrapper, process_args),
+            total=len(process_args),
+            desc="Processing stations"
+        ))
+
+    # Process results
+    for station_code, success, error in results:
+        if success:
             logging.info(f"Successfully processed {station_code}")
-            logging.info(f"Created {hdf5_path} and {csv_path}")
             success_count += 1
-        except Exception as e:
-            logging.error(f"Failed to process station {station_code}: {e}")
+        else:
+            logging.error(f"Failed to process station {station_code}: {error}")
             error_count += 1
 
     logging.info(f"\nProcessing complete:")

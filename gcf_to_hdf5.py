@@ -90,6 +90,11 @@ class GcfPreprocessor:
 
                 # Trim to exact time window
                 tr.trim(start_time, end_time, pad=True, fill_value=0)
+                tr.detrend('demean')
+
+                tr.filter('bandpass', freqmin=1.0, freqmax=45, corners=2, zerophase=True)
+                tr.taper(max_percentage=0.001, type='cosine', max_length=2)
+
 
                 # Ensure exact number of samples
                 if len(tr.data) > n_samples:
