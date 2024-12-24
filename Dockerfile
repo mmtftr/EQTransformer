@@ -6,6 +6,7 @@ COPY pixi.toml pixi.lock* ./
 # Install dependencies
 RUN pixi install
 
+
 # Copy source code
 COPY create_stations_json.py .
 COPY organize_gcf_files.py .
