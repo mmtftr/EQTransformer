@@ -1,4 +1,4 @@
-FROM ghcr.io/prefix-dev/pixi-docker:0.39.3-jammy-cuda-12.2.2
+FROM ghcr.io/prefix-dev/pixi:0.39.3-jammy-cuda-12.2.2
 
 # Copy pixi.toml and lock file
 COPY pixi.toml pixi.lock* ./
