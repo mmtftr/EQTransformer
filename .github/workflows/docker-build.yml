@@ -2,11 +2,11 @@ name: Build EQTransformer Docker Image
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
     paths:
       - 'Dockerfile'
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
     paths:
       - 'Dockerfile'
 
