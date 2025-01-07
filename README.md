@@ -10,7 +10,7 @@ There is a docker image that allows the execution of the full workflow given a m
 
 ```bash
 # This will first organize the GCF files into station directories, then convert the GCF files to MSEED format, and finally run the EQTransformer on the MSEED files.
-docker run -v /path/to/data:/data -it ghcr.io/mmtftr/eqtransformer:latest -i /data/gcf_files
+docker run -v /path/to/data:/data -it ghcr.io/mmtftr/eqtransformer:latest /data
 ```
 
 The base repository's readme follows.
