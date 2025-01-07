@@ -35,6 +35,12 @@ def main():
 
     parser.add_argument('input_dir', type=str,
                         help='Directory containing input GCF files')
+    parser.add_argument('--only-step', type=int,
+                        help='Only runs one step:\n'
+                        '1: create_stations_json.py,\n'
+                        '2: organize_gcf_files.py,\n'
+                        '3: preprocess_gcf.py,\n'
+                        '4: predict.py')
     parser.add_argument('--log-file', type=str,
                         help='Log file path (optional)')
 
@@ -81,7 +87,9 @@ def main():
     ]
 
     # Execute each step
-    for step in steps:
+    for i, step in enumerate(steps):
+        if args.only_step and i != args.only_step-1:
+            continue
         if not run_command(step['cmd'], step['description']):
             logging.error("Pipeline failed. Exiting.")
             return 1
