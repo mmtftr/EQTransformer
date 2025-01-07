@@ -34,7 +34,7 @@ setup(
 	#'jupyter==1.0.0'
 	 ],
 
-    python_requires='==3.10.5',
+    #python_requires='==3.10.5',
 )
 
 

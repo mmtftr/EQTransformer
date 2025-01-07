@@ -26,3 +26,4 @@ jupyter = "1.0.0"
 
 [pypi-dependencies]
 eqtransformer = { path = "." }
+#eqtransformer = { path = "." }

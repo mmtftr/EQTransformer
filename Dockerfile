@@ -1,7 +1,7 @@
 FROM ghcr.io/prefix-dev/pixi:0.39.3-jammy-cuda-12.2.2
 
 # Copy pixi.toml and lock file
-COPY pixi.toml pixi.lock* ./
+COPY pixi.toml pixi.lock ./
 COPY . .
 
 # Install dependencies
