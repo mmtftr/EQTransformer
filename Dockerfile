@@ -16,8 +16,8 @@ COPY process_data.py .
 # Make process_data.py executable
 RUN chmod +x process_data.py
 
-# Set the entrypoint to use pixi shell
-ENTRYPOINT ["pixi", "shell", "--"]
+# Executable container
+ENTRYPOINT ["pixi", "run", "python", "./process_data.py"]
 
-# Set the default command to run process_data.py
-CMD ["./process_data.py", "/data"]
+# Default input directory is /data
+CMD ["/data"]

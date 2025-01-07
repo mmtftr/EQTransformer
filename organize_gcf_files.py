@@ -32,7 +32,8 @@ def organize_files(input_dir: Path, output_dir: Path, dry_run: bool = False):
         If True, only print what would be done without moving files
     """
     # GCF filename pattern: STATION_DATE_TIME_RATE_B_NETWORK_COMPONENT.GCF
-    pattern = r'^([A-Z0-9]+)\s_\d{8}_\d{4}_\d+_B_[A-Z]+_[ENZ]\.GCF$'
+
+    pattern = r'^([A-Z0-9]+)\s?_\d{8}_\d{4}_\d+_B_[A-Z]+_[ENZ]\.GCF$'
 
     # Track statistics
     stats = {
