@@ -22,7 +22,7 @@ def run_command(cmd: list, description: str) -> bool:
     """Run a command and log its output"""
     logging.info(f"Starting {description}...")
     try:
-        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+        result = subprocess.run(cmd, check=True, capture_output=False, text=True)
         logging.info(f"Successfully completed {description}")
         return True
     except subprocess.CalledProcessError as e:
@@ -52,12 +52,12 @@ def main():
 
     # Define the pipeline steps
     steps = [
-        {
-            'cmd': ['python', 'create_stations_json.py',
-                   '--data_dir', str(base_dir / "gcf_files"),
-                   '--output_file', str(base_dir / "stations.json")],
-            'description': 'creating stations.json'
-        },
+        # {
+        #     'cmd': ['python', 'create_stations_json.py',
+        #            '--data_dir', str(base_dir / "gcf_files"),
+        #            '--output_file', str(base_dir / "stations.json")],
+        #     'description': 'creating stations.json'
+        # },
         {
             'cmd': ['python', 'organize_gcf_files.py',
                    str(base_dir / "gcf_files"),
