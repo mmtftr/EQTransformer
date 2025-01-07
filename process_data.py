@@ -52,12 +52,12 @@ def main():
 
     # Define the pipeline steps
     steps = [
-        # {
-        #     'cmd': ['python', 'create_stations_json.py',
-        #            '--data_dir', str(base_dir / "gcf_files"),
-        #            '--output_file', str(base_dir / "stations.json")],
-        #     'description': 'creating stations.json'
-        # },
+        {
+            'cmd': ['python', 'create_stations_json.py',
+                   '--data_dir', str(base_dir / "gcf_files"),
+                   '--output_file', str(base_dir / "stations.json")],
+            'description': 'creating stations.json'
+        },
         {
             'cmd': ['python', 'organize_gcf_files.py',
                    str(base_dir / "gcf_files"),
