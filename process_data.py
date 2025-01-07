@@ -70,6 +70,13 @@ def main():
                    str(processed_dir),
                    str(base_dir / "stations.json")],
             'description': 'preprocessing GCF files'
+        },
+        {
+            'cmd': ['python', 'predict.py',
+                    str(processed_dir),
+                    'EqT_original_model',
+                    '--output_dir', 'detections'],
+            'description': 'running EQTransformer prediction'
         }
     ]
 
